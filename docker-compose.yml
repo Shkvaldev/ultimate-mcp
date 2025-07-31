@@ -1,0 +1,14 @@
+services:
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    deploy:
+    restart: unless-stopped
+    network_mode: host
+  playwright:
+    image: mcr.microsoft.com/playwright:v1.50.1-noble
+    network_mode: host
+    # You can change port of playwright API here
+    command: /bin/sh -c "npx -y playwright@1.50.1 run-server --port 3000 --host 0.0.0.0"
+    restart: unless-stopped

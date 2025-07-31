@@ -1,0 +1,1 @@
+from .related_queries import get_related_queries_trends
