@@ -4,6 +4,14 @@ from loguru import logger
 from urllib.parse import urlencode
 from playwright.async_api import Playwright, async_playwright, Route, Request, Response
 
+def extract_queries(data):
+    try:
+        return [keyword['query'] 
+                for ranked_list in data['default']['rankedList'] 
+                for keyword in ranked_list['rankedKeyword']]
+    except Exception as e:
+        logger.error("Failed to extract queries, skipping ...")
+
 async def get_related_queries_trends(
         query: str,
         date: str = "today 1-m",
@@ -70,7 +78,7 @@ async def get_related_queries_trends(
             await asyncio.wait_for(data_received.wait(), timeout=30.0) 
             logger.info("Data successfully intercepted and processed.")
             
-            return intercepted_data[0] 
+            return extract_queries(intercepted_data[0]) 
 
         except asyncio.TimeoutError:
             logger.error("Timeout: Did not receive the expected API response within the time limit.")
