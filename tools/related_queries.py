@@ -3,6 +3,7 @@ import asyncio
 from loguru import logger
 from urllib.parse import urlencode
 from playwright.async_api import Playwright, async_playwright, Route, Request, Response
+from playwright_stealth import Stealth
 
 def extract_queries(data):
     try:
@@ -19,7 +20,7 @@ async def get_related_queries_trends(
         hl: str = "ru-RU",
         gprop: str = "youtube"
     ):
-    async with async_playwright() as p:
+    async with Stealth().use_async(async_playwright()) as p:
         browser = await p.chromium.connect("ws://127.0.0.1:3000/")
         
         context = await browser.new_context()
